@@ -1,0 +1,80 @@
+swagger: "2.0"
+info:
+  description: "API de détection des émotions."
+  version: "1.0.0"
+  title: "Emotional Recognition Api"
+  
+tags:
+- name: "emotion"
+  description: ""
+schemes:
+- "http"
+paths:
+  /emotions/actions/retrieve-facial-emotion:
+    post:
+      tags:
+      - "emotion"
+      summary: "Détection des émotions faciale"
+      description: ""
+      operationId: "detectEmotions"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Tableau d'images à analyser"
+        required: true
+        schema:
+          $ref: "#/definitions/Emotion"
+      responses:
+        200:
+          description: "Opération réussie"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        400:
+          description: "Invalid request"
+            
+definitions:
+  Emotion:
+    type: "object"
+    properties:
+      pictures:
+        type: "array"
+        items:
+          $ref: "#/definitions/Picture"
+  Picture:
+    type: "string"
+    format: "byte"
+    description: "Image encodée en Base64"
+
+  ApiResponse:
+    description: "Emotion détectée"
+    type: "object"
+    properties:
+      scores:
+        type: "object"
+        description: "Emotions de bases"
+        properties:
+          anger:
+            type: "number"
+            format: "float"
+          disgust:
+            type: "number"
+            format: "float"
+          fear:
+            type: "number"
+            format: "float"
+          happiness:
+            type: "number"
+            format: "float"
+          neutral:
+            type: "number"
+            format: "float"
+          sadness:
+            type: "number"
+            format: "float"
+          surprise:
+            type: "number"
+            format: "float"
