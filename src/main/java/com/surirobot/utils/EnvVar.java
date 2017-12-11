@@ -5,13 +5,13 @@ package com.surirobot.utils;
  */
 public enum EnvVar {
 
-	APIKEY;
+	APIKEY,
+	API_ALGORITHMIA;
 
 	private String value;
 
 	EnvVar(){
 		try{
-			System.out.println(System.getenv(toString()));
 			value = System.getenv(toString());
 		} catch (Exception e){
 			value = null;

@@ -1,7 +1,10 @@
 package com.surirobot.process;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
@@ -63,7 +66,27 @@ public class ProcessPicture implements IProcessPicture{
 		}finally{
 			executor.shutdown();
 		};
-		return average(scores).toString();
+		return getImportantEmotion(average(scores)).toString();
+	}
+	
+	/*
+	 * Méthode qui nous retourne l'émotion dominante
+	 */
+	public JSONObject getImportantEmotion(JSONObject json) {
+		logger.info("ProcessPicture : start getImportantEmotion");
+		Double max = 0.0;
+		String s = Emotion.NEUTRAL.toString().toLowerCase();
+		Map<String, Object> map = json.getJSONObject("scores").toMap();
+		for(Entry<String, Object> e: map.entrySet()) {
+        	if(e.getValue() instanceof Integer) {
+        		e.setValue((Double)((Integer) e.getValue()).doubleValue());
+        	}
+        	if((max) < (Double) e.getValue()) {
+        		max = ((Double) e.getValue());
+        		s = e.getKey();
+        	}
+		}
+		return new JSONObject().put("emotion", s);
 	}
 
 	/*
@@ -79,7 +102,6 @@ public class ProcessPicture implements IProcessPicture{
 		scores.forEach(score -> {
 			if(score != null && score.length() != 0)
 				for(Emotion e : Emotion.values()) {
-					//System.out.println("AVERAGE ====" +score);
 					result.put(e.toString().toLowerCase(),
 							result.getDouble(e.toString().toLowerCase())+score.getJSONObject("scores").optDouble(e.toString().toLowerCase(),0.0));
 				}

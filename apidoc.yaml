@@ -53,28 +53,6 @@ definitions:
     description: "Emotion détectée"
     type: "object"
     properties:
-      scores:
-        type: "object"
+      emotion:
+        type: "string"
         description: "Emotions de bases"
-        properties:
-          anger:
-            type: "number"
-            format: "float"
-          disgust:
-            type: "number"
-            format: "float"
-          fear:
-            type: "number"
-            format: "float"
-          happiness:
-            type: "number"
-            format: "float"
-          neutral:
-            type: "number"
-            format: "float"
-          sadness:
-            type: "number"
-            format: "float"
-          surprise:
-            type: "number"
-            format: "float"

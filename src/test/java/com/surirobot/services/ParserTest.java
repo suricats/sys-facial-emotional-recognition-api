@@ -40,7 +40,7 @@ public class ParserTest {
 				"      \"surprise\": 0.1" + 
 				"    }" + 
 				"  }]";
-		response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 200, "Partial Content");
+		response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 200, "");
 		try {
 			response.setEntity(new StringEntity(s));
 		} catch (UnsupportedEncodingException e) {
