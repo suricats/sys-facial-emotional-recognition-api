@@ -48,8 +48,8 @@ public class ProcessPictureTest {
 		listImages.add("");
 		json = new JSONObject(new ProcessPicture().process(listImages));
 		assertTrue(json.length() != 0);
-		for(Emotion v : Emotion.values())
-			assertTrue(json.getJSONObject("scores").getDouble(v.toString().toLowerCase()) == 0.0);
+		assertTrue(json.getString("emotion").equals("neutral"));
+			
 	}
 	
 	@Test
