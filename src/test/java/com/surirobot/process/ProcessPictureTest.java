@@ -38,25 +38,21 @@ public class ProcessPictureTest {
 		assertTrue(json.length() == 0);
 	}
 	
-	/*
-	 * Test de process pour une image incorecte
-	 * Le système renvoi bien le score, mais les émotions
-	 * toute à 0
-	 */
-	@Test
-	public void processTest() {
-		listImages.add("");
-		json = new JSONObject(new ProcessPicture().process(listImages));
-		assertTrue(json.length() != 0);
-		assertTrue(json.getString("emotion").equals("neutral"));
-			
-	}
-	
 	@Test
 	public void averageTest() {
 		JSONObject result = ProcessPicture.average(listScores);
 		for(Emotion e : Emotion.values()) {
 			assertTrue(result.getJSONObject("scores").getDouble(e.toString().toLowerCase()) == 1.5);
 		}
+	}
+	
+	@Test
+	public void getImportantEmotionTest() {
+		JSONObject tmp = new JSONObject();
+		for(Emotion e : Emotion.values()) {
+			tmp.put(e.toString().toLowerCase(), 0);
+		}
+		JSONObject emotion = ProcessPicture.getImportantEmotion(new JSONObject().put("scores", tmp));
+		assertTrue(emotion.getString("emotion").equals(Emotion.NEUTRAL.toString().toLowerCase()));
 	}
 }

@@ -17,6 +17,10 @@ import org.json.JSONObject;
 import com.surirobot.services.interfaces.IService;
 import com.surirobot.utils.EnvVar;
 
+/*
+ * Class à la quelle on donne une image et qui s'occupe d'appeler l'API
+ * Algorithmia pour la reconnaissance des émotions 
+ */
 public class EmotionAlgorithmia implements IService<String, byte[]>{
 
 private static final Logger logger = LogManager.getLogger();

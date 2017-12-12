@@ -72,7 +72,7 @@ public class ProcessPicture implements IProcessPicture{
 	/*
 	 * Méthode qui nous retourne l'émotion dominante
 	 */
-	public JSONObject getImportantEmotion(JSONObject json) {
+	public static JSONObject getImportantEmotion(JSONObject json) {
 		logger.info("ProcessPicture : start getImportantEmotion");
 		Double max = 0.0;
 		String s = Emotion.NEUTRAL.toString().toLowerCase();
@@ -93,7 +93,7 @@ public class ProcessPicture implements IProcessPicture{
 	 * Méthode qui fait la moyenne des scores
 	 */
 	public static JSONObject average(List<JSONObject> scores) {
-		logger.error("ProcessPicture : start Average");
+		logger.info("ProcessPicture : start Average");
 
 		JSONObject result = new JSONObject();
 		for(Emotion e : Emotion.values()) 

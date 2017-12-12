@@ -16,11 +16,10 @@ import com.surirobot.services.interfaces.IParser;
 import com.surirobot.utils.Emotion;
 
 /*
- * Cette class permet de parser le résutat de la réponse de l'API intérogée. 
+ * Cette class permet de parser le résutat de la réponse de l'API Algorithmia. 
  */
 public class Parser implements IParser{
 	private static final Logger logger = LogManager.getLogger();
-	//private static final String[] emotions = {"Happy", "Neutral", "Sad", "Angry", "Disgust","Fear", "Surprise"};
 	private static Map<String, String> emotions = null;
 
 	public static void initializeMap() {

@@ -15,7 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /*
- * Cette class permet de parser le résutat de la réponse de l'API intérogée. 
+ * Cette class permet de parser le résutat de la réponse de l'API Azure. 
  */
 public class Parser implements IParser{
 	private static final Logger logger = LogManager.getLogger();
