@@ -5,5 +5,5 @@ import org.json.JSONObject;
 
 public interface IService<T,K> {
 	public JSONObject getEmotions(T data);
-	public HttpResponse send(K data);
+	public String send(K data);
 }

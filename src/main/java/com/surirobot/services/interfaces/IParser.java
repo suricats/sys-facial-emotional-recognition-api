@@ -4,5 +4,5 @@ import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 
 public interface IParser {
-	public JSONObject parse(HttpResponse response);
+	public JSONObject parse(String content);
 }

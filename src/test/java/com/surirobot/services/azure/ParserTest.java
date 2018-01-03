@@ -1,4 +1,4 @@
-package com.surirobot.services;
+package com.surirobot.services.azure;
 
 import static org.junit.Assert.assertTrue;
 
@@ -15,13 +15,13 @@ import org.junit.Test;
 import com.surirobot.services.microsoftazure.Parser;
 
 public class ParserTest {
+
 	
-	HttpResponse response;
-	
-	
+	String s;
+
 	@Before
 	public void beforeTest() {
-		String s ="[" + 
+		s ="[" + 
 				"  {" + 
 				"    \"faceRectangle\": {" + 
 				"      \"top\": 114," + 
@@ -40,38 +40,19 @@ public class ParserTest {
 				"      \"surprise\": 0.1" + 
 				"    }" + 
 				"  }]";
-		response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 200, "");
-		try {
-			response.setEntity(new StringEntity(s));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 	}
-	
+
 	@Test
 	public void parseTest() {
-		JSONObject json = new Parser().parse(response);
+		JSONObject json = new Parser().parse(s);
 		assertTrue(json.optJSONObject("faceRectangle")==null);
 		assertTrue(json.optJSONObject("scores")!=null);
 		assertTrue(json.optJSONObject("scores").optDouble("anger") == 0.1);
 	}
-	
-	@Test
-	public void parseBadResponseTest() {
-		response.setStatusCode(400);
-		JSONObject json = new Parser().parse(response);
-		assertTrue(json.similar(new JSONObject("{}")));
-	}
-	
+
 	@Test
 	public void parseEmptyArrayResponseTest() {
-		response.setStatusCode(200);
-		try {
-			response.setEntity(new StringEntity("[]"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		JSONObject json = new Parser().parse(response);
+		JSONObject json = new Parser().parse("[]");
 		assertTrue(json.similar(new JSONObject("{}")));
 	}
 

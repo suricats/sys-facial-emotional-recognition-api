@@ -6,7 +6,8 @@ package com.surirobot.utils;
 public enum EnvVar {
 
 	APIKEY,
-	API_ALGORITHMIA;
+	API_ALGORITHMIA,
+	API_BEYOND;
 
 	private String value;
 

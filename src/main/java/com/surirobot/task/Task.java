@@ -4,6 +4,7 @@ import java.util.concurrent.Callable;
 
 import org.json.JSONObject;
 
+import com.surirobot.services.algorithmia.EmotionAlgorithmia;
 import com.surirobot.services.microsoftazure.EmotionAzure;
 
 /*
