@@ -16,7 +16,7 @@ paths:
       - "emotion"
       summary: "Détection des émotions faciale"
       description: ""
-      operationId: "detectEmotions"
+      operationId: "detectFacialEmotions"
       consumes:
       - "application/json"
       produces:
@@ -27,7 +27,32 @@ paths:
         description: "Tableau d'images à analyser"
         required: true
         schema:
-          $ref: "#/definitions/Emotion"
+          $ref: "#/definitions/EmotionFacial"
+      responses:
+        200:
+          description: "Opération réussie"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        400:
+          description: "Invalid request"
+  /emotions/actions/retrieve-vocal-emotion:
+    post:
+      tags:
+      - "emotion"
+      summary: "Détection des émotions faciale"
+      description: ""
+      operationId: "detectVocalEmotions"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Enregistrement Audio à analyser"
+        required: true
+        schema:
+          $ref: "#/definitions/EmotionVocal"
       responses:
         200:
           description: "Opération réussie"
@@ -37,7 +62,7 @@ paths:
           description: "Invalid request"
             
 definitions:
-  Emotion:
+  EmotionFacial:
     type: "object"
     properties:
       pictures:
@@ -48,6 +73,17 @@ definitions:
     type: "string"
     format: "byte"
     description: "Image encodée en Base64"
+  EmotionVocal:
+    type: "object"
+    properties:
+      record:
+        type: string
+        items:
+          $ref: "#/definitions/Audio"
+  Audio:
+    type: "string"
+    format: "byte"
+    description: "Enregistrement audio encodé en Base64"
 
   ApiResponse:
     description: "Emotion détectée"
