@@ -17,12 +17,19 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.surirobot.communication.RequestEmotion;
+import com.surirobot.communication.Communication;
 import com.surirobot.communication.ResponseHolder;
-import com.surirobot.services.interfaces.IService;
+import com.surirobot.interfaces.services.IService;
 import com.surirobot.utils.EnvVar;
-
-public class EmotionBeyond implements IService<String, byte[]>{
+/**
+ * 
+ * @author jussieu
+ * 
+ * Class à la quelle on donne une image et qui s'occupe d'appeler l'API
+ * beyondverbal pour la reconnaissance des émotions. 
+ *
+ */
+public class EmotionBeyond implements IService<JSONObject, String, byte[]>{
 	private static final String RECORDING_URL = "https://apiv3.beyondverbal.com/v3/recording/";
 	private static final String Auth_URL = "https://token.beyondverbal.com/token";
 	
@@ -39,14 +46,19 @@ public class EmotionBeyond implements IService<String, byte[]>{
 		return json;
 	}
 
-	/*
-	 * Méthode qui nous convertit une image en base64 vers du binaire
+	/**
+	 * Méthode qui nous convertit une image en {@link Base64} vers {@link Byte}.
+	 * @param base64Audio le format de l'audio.
+	 * @return {@link Byte} le resultat de la converion.
 	 */
 	public static byte[] decoder(String base64Audio) {
+		logger.info("EmotionBeyond : start decoder");
 		return Base64.getDecoder().decode(base64Audio);
 	}
 
-
+	/**
+	 * envoyer les donées pré-traité à l'API.
+	 */
 	@Override
 	public String send(byte[] data) {
 		logger.info("EmotionBeyond : start send");
@@ -56,9 +68,9 @@ public class EmotionBeyond implements IService<String, byte[]>{
 		List<Header> headers = new ArrayList<>();
 		headers.add(access_token);
 		try {
-			ResponseHolder responseHolder = RequestEmotion.doPost(RECORDING_URL + "start", headers, entity);
+			ResponseHolder responseHolder = Communication.doPost(RECORDING_URL + "start", headers, entity);
 			recordingid = getRecordingid(responseHolder.content);
-			responseHolder =RequestEmotion.doPost(RECORDING_URL + recordingid, headers, getEntityForSendFile(data));
+			responseHolder =Communication.doPost(RECORDING_URL + recordingid, headers, getEntityForSendFile(data));
 			return responseHolder.content;
 		}catch(IOException e) {
 			e.printStackTrace();
@@ -66,7 +78,11 @@ public class EmotionBeyond implements IService<String, byte[]>{
 		return "";
 	}
 
-
+	/**
+	 * traite la réponse de l'API.
+	 * @param response la réponse de l'API.
+	 * @return le résulatat du traitement.
+	 */
 	private String getRecordingid(String response) {
 		logger.info("EmotionBeyond : start getRecondingid");
 		
@@ -84,8 +100,10 @@ public class EmotionBeyond implements IService<String, byte[]>{
 		return null;
 	}
 
-	/*
-	 * Retourne l'entité d'un fichier
+	/**
+	 * Retourne l'entité d'un fichier.
+	 * @param data les données du flux sous form {@link Byte}
+	 * @return {@link HttpEntity}
 	 */
 	private HttpEntity getEntityForSendFile(byte[] data) {
 		logger.info("EmotionBeyond : start getEntityForSendFile");
@@ -94,8 +112,9 @@ public class EmotionBeyond implements IService<String, byte[]>{
 		return reqEntity;
 	}
 
-	/*
-	 * Retourne l'entité for stream
+	/**
+	 * Retourne l'entité pour stream.
+	 * @return {@link HttpEntity}
 	 */
 	private HttpEntity getEntityForUpstream() {
 		logger.info("EmotionBeyond : start getEntityForUpstream");
@@ -113,8 +132,8 @@ public class EmotionBeyond implements IService<String, byte[]>{
 	}
 
 
-	/*
-	 * Récuperer le token à partir de l'API
+	/**
+	 * Récuperer le token à partir de l'API.
 	 */
 	private void getToken() {
 		logger.info("EmotionBeyond : start getToken");
@@ -122,7 +141,7 @@ public class EmotionBeyond implements IService<String, byte[]>{
 			return;
 		String jsonToken = null;
 		try {
-			jsonToken = RequestEmotion.doPost(Auth_URL, null, getEntityForAccessToken()).content;
+			jsonToken = Communication.doPost(Auth_URL, null, getEntityForAccessToken()).content;
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -141,8 +160,10 @@ public class EmotionBeyond implements IService<String, byte[]>{
 		access_token = header;
 	}
 
-	/*
-	 * Retourne l'entité à envoyer pour récuperer le token
+	/**
+	 * Retourne l'entité à envoyer pour récuperer le token.
+	 * 
+	 * @return le corp de la requete sous format {@link HttpEntity}
 	 */
 	private HttpEntity getEntityForAccessToken() {
 		logger.info("EmotionBeyond : start getEntityForAccessToken");
@@ -160,8 +181,10 @@ public class EmotionBeyond implements IService<String, byte[]>{
 
 	}
 
-	/*
-	 * Configurer un json input
+	/**
+	 *  Configurer un json input.
+	 *  
+	 * @return {@link String} coversion du json .
 	 */
 	private String getConfigData() {
 		logger.info("EmotionBeyond : start getConfigData");

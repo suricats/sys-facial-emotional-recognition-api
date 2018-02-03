@@ -5,17 +5,21 @@ import org.apache.logging.log4j.Logger;
 
 import com.surirobot.interfaces.IProcessVocal;
 import com.surirobot.services.vokaturi.EmotionVokaturi;
-
+/**
+ * 
+ * @author jussieu
+ * 
+ * Permet de traiter le flux audio reçu.
+ *
+ */
 public class ProcessVocal implements IProcessVocal {
 
 	private static final Logger logger = LogManager.getLogger();
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.surirobot.interfaces.IProcess#process(java.lang.Object)
-	 * 
+	/**
 	 * Méthode qui traite le fichier vocal reçu.
-	 * 
+	 * si le flux == {@link <code>null</code>} ou vide: la méthode retourne un json vide.
+	 * sinon : elle passe les donnée à l'API.
 	 */
 	
 	@Override

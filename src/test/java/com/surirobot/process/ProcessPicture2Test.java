@@ -15,10 +15,10 @@ import com.surirobot.utils.Emotion;
  * 
  * @author jussieu
  * 
- * Cette class permet de tester les methodes définies dans la classe {@link ProcessPicture}.
+ * Cette class permet de tester les methodes définies dans la classe {@link ProcessPicture2}.
  *
  */
-public class ProcessPictureTest {
+public class ProcessPicture2Test {
 	List<String> listImages;
 	List<JSONObject> listScores;
 	JSONObject json = null;
@@ -48,48 +48,12 @@ public class ProcessPictureTest {
 	}
 
 	@Test
-	public void averageTest() {
-		List<Double> scores = new ArrayList<Double>();
-		scores.add(1.0);
-		scores.add(2.0);
-		List<JSONObject> listScores = createListScores(scores);
-		JSONObject result = ProcessPicture.average(listScores);
-		for(Emotion e : Emotion.values()) {
-			assertTrue(result.getJSONObject("scores").getDouble(e.toString().toLowerCase()) == 1.5);
-		}
-	}
-
-	@Test
-	public void averageTest2() {
-		List<Double> scores = new ArrayList<Double>();
-		scores.add(2.0);
-		scores.add(3.0);
-		scores.add(4.0);
-		List<JSONObject> listScores = createListScores(scores);
-		JSONObject result = ProcessPicture.average(listScores);
-		for(Emotion e : Emotion.values()) {
-			assertTrue(result.getJSONObject("scores").getDouble(e.toString().toLowerCase()) == 3.0);
-		}
-	}
-
-	@Test
-	public void averageTest3() {
-		List<Double> scores = new ArrayList<Double>();
-		scores.add(2.0);
-		List<JSONObject> listScores = createListScores(scores);
-		JSONObject result = ProcessPicture.average(listScores);
-		for(Emotion e : Emotion.values()) {
-			assertTrue(result.getJSONObject("scores").getDouble(e.toString().toLowerCase()) == 2.0);
-		}
-	}
-
-	@Test
 	public void getImportantEmotionTest() {
 		JSONObject tmp = new JSONObject();
 		for(Emotion e : Emotion.values()) {
 			tmp.put(e.toString().toLowerCase(), 0);
 		}
-		JSONObject emotion = ProcessPicture.getImportantEmotion(new JSONObject().put("scores", tmp));
+		JSONObject emotion = ProcessPicture2.getImportantEmotion(new JSONObject().put("scores", tmp));
 		assertTrue(emotion.getString("emotion").equals(Emotion.NEUTRAL.toString().toLowerCase()));
 	}
 
@@ -108,7 +72,7 @@ public class ProcessPictureTest {
 				tmp.put(e.toString().toLowerCase(), 0);
 			}
 		}
-		JSONObject emotion = ProcessPicture.getImportantEmotion(new JSONObject().put("scores", tmp));
+		JSONObject emotion = ProcessPicture2.getImportantEmotion(new JSONObject().put("scores", tmp));
 		assertTrue(emotion.getString("emotion").equals(Emotion.SADNESS.toString().toLowerCase()));
 	}
 
@@ -127,7 +91,7 @@ public class ProcessPictureTest {
 				tmp.put(e.toString().toLowerCase(), 0);
 			}
 		}
-		JSONObject emotion = ProcessPicture.getImportantEmotion(new JSONObject().put("scores", tmp));
+		JSONObject emotion = ProcessPicture2.getImportantEmotion(new JSONObject().put("scores", tmp));
 		assertTrue(emotion.getString("emotion").equals(Emotion.HAPPINESS.toString().toLowerCase()));
 	}
 }

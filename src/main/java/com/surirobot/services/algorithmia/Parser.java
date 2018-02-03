@@ -6,19 +6,25 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.surirobot.services.interfaces.IParser;
+import com.surirobot.interfaces.services.IParser;
 import com.surirobot.utils.Emotion;
 
-/*
- * Cette class permet de parser le résutat de la réponse de l'API Algorithmia. 
+/**
+ * 
+ * @author jussieu
+ * 
+ * Cette class permet de parser le résutat de la réponse de l'API Algorithmia.
+ *
  */
 public class Parser implements IParser{
 	private static final Logger logger = LogManager.getLogger();
 	private static Map<String, String> emotions = null;
 
 	public static void initializeMap() {
+		logger.info("EmotionAlgorithmia Parser : start initializeMap+");
 		if(emotions == null) {
 			emotions = new HashMap<>();
 			emotions.put("Sad", Emotion.SADNESS.toString());
@@ -31,11 +37,11 @@ public class Parser implements IParser{
 		}
 	}
 
-	/*
-	 * Cette méthode parse le résultat de l'API Algorithmia
+	/**
+	 * Cette méthode parse le résultat de l'API Algorithmia.
 	 */
 	@Override
-	public JSONObject parse(String response) {
+	public JSONObject parse(String response) throws JSONException {
 		logger.info("EmotionAlgorithmia Parser : start parse");
 		initializeMap();
 		JSONObject json = new JSONObject(response);
@@ -51,6 +57,7 @@ public class Parser implements IParser{
 		}
 		return new JSONObject().put("scores", score);
 	}
+
 
 }
 

@@ -5,9 +5,16 @@ import static org.junit.Assert.assertTrue;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import com.surirobot.process.ProcessPicture;
 import com.surirobot.services.vokaturi.Parser;
 import com.surirobot.utils.Emotion;
-
+/**
+ * 
+ * @author jussieu
+ * 
+ * Cette class permet de tester les methodes définies dans la classe {@link Parser}.
+ *
+ */
 public class ParserTest {
 
 	@Test
@@ -61,5 +68,18 @@ public class ParserTest {
 			"}";
 		JSONObject json = new Parser().parse(s);
 		assertTrue(json.getString("emotion").equals(Emotion.SADNESS.toString().toLowerCase()));
+	}
+	
+	@Test
+	public void parseTest5() {
+		String s = "{"+
+				"      \"anger\": 0.7," +  
+				"      \"fear\": 0.22," + 
+				"      \"happiness\": 0.08," + 
+				"      \"neutral\": 0.0," + 
+				"      \"sadness\": 0.0," +
+			"}";
+		JSONObject json = new Parser().parse(s);
+		assertTrue(json.has("emotion"));
 	}
 }

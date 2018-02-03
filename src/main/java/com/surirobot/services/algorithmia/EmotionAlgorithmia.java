@@ -13,25 +13,27 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-import com.surirobot.communication.RequestEmotion;
+import com.surirobot.communication.Communication;
 import com.surirobot.communication.ResponseHolder;
-import com.surirobot.services.interfaces.IService;
+import com.surirobot.interfaces.services.IService;
 import com.surirobot.utils.EnvVar;
 
-/*
+/**
+ * 
+ * @author jussieu
+ * 
  * Class à la quelle on donne une image et qui s'occupe d'appeler l'API
- * Algorithmia pour la reconnaissance des émotions 
+ * Algorithmia pour la reconnaissance des émotions. 
+ *
  */
-public class EmotionAlgorithmia implements IService<String, byte[]>{
+public class EmotionAlgorithmia implements IService<JSONObject, String, byte[]>{
 
 	private static final Logger logger = LogManager.getLogger();
 	
 	private static final String URL = "https://api.algorithmia.com/v1/algo/deeplearning/EmotionRecognitionCNNMBP/1.0.1";
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.surirobot.services.interfaces.IService#getEmotions(java.lang.Object)
-	 * Recuperer la réponse de Algorithmia
+	/**
+	 * Recuperer la réponse de l'API Algorithmia.
 	 */
 	@Override
 	public JSONObject getEmotions(String image) {
@@ -42,17 +44,18 @@ public class EmotionAlgorithmia implements IService<String, byte[]>{
 		return json;
 	}
 
-	/*
-	 * Méthode qui nous convertit une image en base64 vers du binaire
+	/**
+	 * Méthode qui nous convertit une image en {@link Base64} vers {@link Byte}.
+	 * 
+	 * @param base64Image l'image sous format {@link Base64}
+	 * @return le résulatat de conversion.
 	 */
 	public static byte[] decoder(String base64Image) {
 		return Base64.getDecoder().decode(base64Image);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.surirobot.services.interfaces.IService#send(java.lang.Object)
-	 * Méthode qui s'occupe d'appeler Algorithmia et récuperer le résultat
+	/**
+	 * Méthode qui s'occupe d'appeler Algorithmia et récuperer le résultat.
 	 */
 	@Override
 	public String send(byte[] image) {
@@ -63,7 +66,7 @@ public class EmotionAlgorithmia implements IService<String, byte[]>{
 		logger.info("KEY : "+System.getenv(EnvVar.API_ALGORITHMIA.toString()));
 		headers.add(new BasicHeader("Authorization","Simple "+System.getenv(EnvVar.API_ALGORITHMIA.toString())));
 		try {
-			ResponseHolder responseHolder = RequestEmotion.doPost(URL, headers
+			ResponseHolder responseHolder = Communication.doPost(URL, headers
 					,new ByteArrayEntity(image, ContentType.APPLICATION_OCTET_STREAM));
 			return responseHolder.content;
 		}catch(IOException e) {

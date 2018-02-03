@@ -3,7 +3,13 @@ package com.surirobot.process;
 import org.json.JSONObject;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-
+/**
+ * 
+ * @author jussieu
+ * 
+ * Cette class permet de tester les methodes définies dans la classe {@link ProcessVocal}.
+ *
+ */
 public class ProcessVocalTest {
 	
 	@Test

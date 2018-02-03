@@ -25,27 +25,36 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public final class RequestEmotion {
-
+import com.surirobot.interfaces.services.ICommunication;
+/**
+ * 
+ * @author jussieu
+ * 
+ * Cette classe permet de communiquer notre module avec les API's externes
+ * à fin de pouvoir récupéré le résultat souhaité.
+ *
+ */
+public final class Communication implements ICommunication {
+	private static final Logger logger = LogManager.getFormatterLogger();
+	
 	/**
-	 * Sends https post with {@link HttpEntity} param to server
-	 *
-	 * @param url
-	 *            Requested url
-	 * @param header
-	 *            Data to post to server
-	 * @return ResponseHolder the {@link ResponseHolder} holds response and
-	 *         status code
+	 * 
+	 * @param url l'url de L'API  intérrogée.
+	 * @param header le header de la requete
+	 * @return la réponse obtenue de l'API.
+	 * @throws IOException l'exception lancée en cas d'erreur.
 	 */
-	public static ResponseHolder doGet(String url, Header header) throws IOException
-	{
+
+	public static ResponseHolder doGet(String url, Header header) throws IOException {
+		logger.info("Communication : start doGet");
 		HttpClient client = createHttpClient();
 		HttpGet get = new HttpGet(url);// POST to API
-		ResponseHolder responseHolder =new ResponseHolder();
+		ResponseHolder responseHolder = new ResponseHolder();
 
-		if (header != null)
-		{
+		if (header != null) {
 			get.addHeader(header);
 		}
 
@@ -57,23 +66,28 @@ public final class RequestEmotion {
 		responseHolder.content = readStream(content);
 		return responseHolder;
 	}
-
-	public static ResponseHolder doPost(String url, List<Header> headers, HttpEntity entity) 
-			throws IOException
-	{
+	
+   /** 
+    * 
+    * @param url l'url de L'API  intérrogée.
+	* @param headers la liste des headers de la requete .
+    * @param entity le corp de la requete.
+    * @return la réponse obtenue de L'API.
+    * @throws IOException l'exception lancée en cas d'erreur.
+    */
+	public static ResponseHolder doPost(String url, List<Header> headers, HttpEntity entity) throws IOException {
+		logger.info("Communication : start doPost");
 		HttpClient client = createHttpClient();
 		HttpPost httpPost = new HttpPost(url);// POST to API
-		ResponseHolder responseHolder =new ResponseHolder();
+		ResponseHolder responseHolder = new ResponseHolder();
 
-		if (headers != null && headers.size()>0)
-		{
-			for(Header header : headers) {
+		if (headers != null && headers.size() > 0) {
+			for (Header header : headers) {
 				httpPost.addHeader(header);
 			}
 		}
 
-
-		if(entity!=null)
+		if (entity != null)
 			httpPost.setEntity(entity);
 		HttpResponse response = client.execute(httpPost);
 
@@ -85,18 +99,19 @@ public final class RequestEmotion {
 	}
 
 	/**
-	 * Convert the status code to user friendly {@link String}
 	 *
-	 * @param responseCode
-	 * @return statusString
+	 * @param responseCode la code de la réponse obtenue.
+	 * @return statusString le résultat de la conversion du code obtenu.
 	 */
-	private static String getStatusString(int responseCode)
-	{
+	private static String getStatusString(int responseCode) {
+		logger.info("Communication : start getStatusString");
 		return responseCode == HttpURLConnection.HTTP_OK ? "Success" : "Failed";
 	}
-
-	private static HttpClient createHttpClient()
-	{
+	/**
+	 * 
+	 * @return un objet de type {@link HttpClient}.
+	 */
+	private static HttpClient createHttpClient() {
 		HttpParams params = new BasicHttpParams();
 
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
@@ -104,9 +119,10 @@ public final class RequestEmotion {
 		HttpProtocolParams.setUseExpectContinue(params, true);
 
 		SchemeRegistry schReg = new SchemeRegistry();
-		//HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+		// HostnameVerifier hostnameVerifier =
+		// org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
 		SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
-		//socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
+		// socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
 		schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 		schReg.register(new Scheme("https", socketFactory, 443));
 		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
@@ -114,29 +130,25 @@ public final class RequestEmotion {
 		return new DefaultHttpClient(conMgr, params);
 	}
 
-	/**
-	 * Convert from {@link InputStream} to {@link String}
-	 *
-	 * @param in
-	 *            the {@link InputStream}
-	 * @return {@link String}
+	/** 
+	 * Convertir {@link InputStream} en {@link String}.
+	 * 
+	 * @param in donée sous format {@link InputStream}.
+	 * @return la conversion de {@link InputStream} en {@link String}.
 	 */
-	private static String readStream(InputStream in)
-	{
+	private static String readStream(InputStream in) {
+		logger.info("Communication : start readStream");
 		InputStreamReader is = new InputStreamReader(in);
 		StringBuilder sb = new StringBuilder();
-		try
-		{
+		try {
 			BufferedReader br = new BufferedReader(is);
 			String read = br.readLine();
 
-			while (read != null)
-			{
+			while (read != null) {
 				sb.append(read);
 				read = br.readLine();
 			}
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return sb.toString();

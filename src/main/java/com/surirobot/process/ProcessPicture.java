@@ -19,27 +19,27 @@ import org.json.JSONObject;
 import com.surirobot.interfaces.IProcessPicture;
 import com.surirobot.task.Task;
 import com.surirobot.utils.Emotion;
+import com.surirobot.utils.ExecutorSingleton;
 
-/*
- * Class permettant de traiter la liste des images reçues en Base64
+/**
+ * 
+ * @author jussieu
+ * 
+ * Class permettant de traiter la liste des images reçues en Base64.
+ *
  */
 
 public class ProcessPicture implements IProcessPicture{
 
 	private static final Logger logger = LogManager.getLogger();
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.surirobot.interfaces.IProcess#process(java.lang.Object)
-	 * 
+	/**
 	 * Méthode qui crée des threads et récupère le résultat de chaque thread
-	 * et fait la moyenne des scores 
+	 * et fait la moyenne des scores.
 	 */
-	
 	@Override
-	public String process(List<String> data) {
-		logger.info("ProcessPicture : start process");
-
+	public synchronized String process(List<String> data) {
+		logger.info("ProcessPicture : start process : ");
 		if(data.size()<1) return "{}";
 
 		List<Callable<JSONObject>> tasks = new ArrayList<>();
@@ -47,9 +47,8 @@ public class ProcessPicture implements IProcessPicture{
 			tasks.add(new Task(e));
 		});
 
-		ExecutorService executor = Executors.newFixedThreadPool(data.size());
-		CompletionService<JSONObject> completionService =
-				new ExecutorCompletionService<JSONObject>(executor);
+		CompletionService completionService = ExecutorSingleton.getInstance();
+		
 
 		List<JSONObject> scores = new ArrayList<>();
 		List<Future<JSONObject>> futures = new ArrayList<Future<JSONObject>>();
@@ -57,19 +56,23 @@ public class ProcessPicture implements IProcessPicture{
 			for(Callable<JSONObject> task : tasks)
 				futures.add(completionService.submit(task));
 
-			for(int i = 0; i<tasks.size();i++) 
-				scores.add(completionService.take().get());
+			for(int i = 0; i<tasks.size();i++)
+				scores.add((JSONObject) completionService.take().get());
 
 		} catch (InterruptedException | ExecutionException e) {
 			logger.error("Interruption Execution Thread...\n"+e.getStackTrace());
 		}finally{
-			executor.shutdown();
+			//executor.shutdown();
 		};
 		return getImportantEmotion(average(scores)).toString();
 	}
 	
-	/*
-	 * Méthode qui nous retourne l'émotion dominante
+	/**
+	 * 
+	 * Méthode qui nous retourne l'émotion dominante .
+	 * 
+	 * @param json content la réponse obtenue de L'API.
+	 * @return l'emotion contenant le plus grand score.
 	 */
 	public static JSONObject getImportantEmotion(JSONObject json) {
 		logger.info("ProcessPicture : start getImportantEmotion");
@@ -88,11 +91,13 @@ public class ProcessPicture implements IProcessPicture{
 		return new JSONObject().put("emotion", s);
 	}
 
-	/*
-	 * Méthode qui fait la moyenne des scores
+	/**
+	 * Méthode qui fait la moyenne des scores.
+	 * @param scores laliste des emotions pour chaque visage.
+	 * @return la moyenne pour chaque émotion obtenue.
 	 */
 	public static JSONObject average(List<JSONObject> scores) {
-		logger.info("ProcessPicture : start Average");
+		logger.info("ProcessPicture : start average");
 
 		JSONObject result = new JSONObject();
 		for(Emotion e : Emotion.values()) 

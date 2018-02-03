@@ -4,23 +4,27 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.surirobot.services.interfaces.IParser;
+import com.surirobot.interfaces.services.IParser;
 import com.surirobot.utils.Emotion;
 
-/*
- * Cette class permet de parser le résutat de la réponse du serveur Vokaturi. 
+/**
+ * 
+ * @author rjussieu
+ *
+ * Cette class permet de parser le résutat de la réponse du serveur Vokaturi.
  */
 public class Parser implements IParser{
 	
 	private static final Logger logger = LogManager.getLogger();
 
-	/*
-	 * Cette méthode parse le résultat de l'API Vokaturi
+	/**
+	 * Cette méthode parse le résultat de l'API Vokaturi.
 	 */
 	@Override
-	public JSONObject parse(String content) {
+	public JSONObject parse(String content)throws JSONException {
 		logger.info("EmotionVokaturi Parser : start parse");
 		
 		JSONObject json = new JSONObject(content);
@@ -29,10 +33,13 @@ public class Parser implements IParser{
 		return new JSONObject().put("emotion", getImportantEmotion(json));
 	}
 	
-	/*
-	 * Méthode qui nous retourne l'émotion dominante
+	/**
+	 * Méthode qui nous retourne l'émotion dominante.
+	 * @param json contient toutes les émotions obtenues par l'API.
+	 * @return l'motion contenante le plus grand score.
+	 * @throws JSONException lancée en cas d'erreur.
 	 */
-	public static String getImportantEmotion(JSONObject json) {
+	public static String getImportantEmotion(JSONObject json) throws JSONException {
 		logger.info("EmotionVokaturi ProcessPicture : start getImportantEmotion");
 		
 		Double max = 0.0;

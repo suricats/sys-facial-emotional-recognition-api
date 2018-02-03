@@ -1,7 +1,10 @@
 package com.surirobot.utils;
 
-/*
- * Enumération pour les variables d'environnement 
+/**
+ * 
+ * @author jussieu
+ *
+ * Enumération pour les variables d'environnement.
  */
 public enum EnvVar {
 

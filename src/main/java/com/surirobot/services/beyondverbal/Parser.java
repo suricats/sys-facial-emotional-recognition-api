@@ -5,17 +5,19 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.surirobot.services.interfaces.IParser;
+import com.surirobot.interfaces.services.IParser;
 
 
-/*
+/**
+ * @author jussieu.
  * Cette class permet de parser le résutat de la réponse de l'API Beyond. 
+ * 
  */
 public class Parser implements IParser{
 	private static final Logger logger = LogManager.getLogger();
 
-	/*
-	 * Cette méthode parse le résultat de l'API Beyond
+	/**
+	 * Cette méthode parse le résultat de l'API Beyond.
 	 */
 	@Override
 	public JSONObject parse(String content) {

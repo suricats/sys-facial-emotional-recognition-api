@@ -11,5 +11,6 @@ import com.surirobot.task.Task;
  * et de deleguer le travail au <code>{@link Task}</code>,
  * ensuite elle permet de passer le résultat au <code>{@link Par}</code>
  */
-public interface IProcessPicture extends IProcess<List<String>>{
+public interface IProcessPicture2 extends IProcess<String>{
+	
 }

@@ -1,5 +1,6 @@
 package com.surirobot.services.azure;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.UnsupportedEncodingException;
@@ -12,8 +13,15 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.surirobot.process.ProcessPicture;
 import com.surirobot.services.microsoftazure.Parser;
-
+/**
+ * 
+ * @author jussieu
+ * 
+ * Cette class permet de tester les methodes définies dans la classe {@link Parser}.
+ *
+ */
 public class ParserTest {
 
 	
@@ -48,6 +56,14 @@ public class ParserTest {
 		assertTrue(json.optJSONObject("faceRectangle")==null);
 		assertTrue(json.optJSONObject("scores")!=null);
 		assertTrue(json.optJSONObject("scores").optDouble("anger") == 0.1);
+	}
+	
+	@Test
+	public void parseTest1() {
+		JSONObject json = new Parser().parse(s);
+		assertFalse(json.has("faceRectangle"));
+		assertTrue(json.has("scores"));
+		assertTrue(json.optJSONObject("scores").has("anger"));
 	}
 
 	@Test
