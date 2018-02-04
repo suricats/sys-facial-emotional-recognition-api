@@ -15,24 +15,8 @@ import com.surirobot.utils.Emotion;
  *
  * Cette class permet de parser le résutat de la réponse de l'API Azure. 
  */
-public class Parser implements IParser{
+public class Parser implements IParser<JSONArray>{
 	private static final Logger logger = LogManager.getLogger();
-
-	/**
-	 * Cette méthode parse le résultat de l'API Azure.
-	 */
-	@Override
-	public JSONObject parse(String content) {
-		logger.info("EmotionAzure Parser : start parse");
-		JSONArray json = new JSONArray(content);
-		if(json.length()<1) return new JSONObject();
-		JSONObject tmp = json.getJSONObject(0).getJSONObject("scores");
-		JSONObject score = new JSONObject();
-		for(Emotion e : Emotion.values()) {
-			score.put(e.toString().toLowerCase(), tmp.optDouble(e.toString().toLowerCase(), 0.0));
-		}
-		return new JSONObject().put("scores", score);
-	}
 	
 	/**
 	 * Cette méthode parse le résultat de l'API Azure.
@@ -40,9 +24,8 @@ public class Parser implements IParser{
 	 * @return le résultat du parser sous format {@link JSONArray}
 	 * @throws JSONException l'exception lancée en cas d'erreur.
 	 */
-	public static JSONArray parse2(String content) throws JSONException {
+	public JSONArray parse(String content) throws JSONException {
 		logger.info("EmotionAzure Parser : start parse");
-		logger.info("JSON ===== "+content);
 		JSONArray json = null;
 		json = new JSONArray(content);
 		if(json.length()<1) return new JSONArray();

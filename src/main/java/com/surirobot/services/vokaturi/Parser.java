@@ -16,7 +16,7 @@ import com.surirobot.utils.Emotion;
  *
  * Cette class permet de parser le résutat de la réponse du serveur Vokaturi.
  */
-public class Parser implements IParser{
+public class Parser implements IParser<JSONObject>{
 	
 	private static final Logger logger = LogManager.getLogger();
 

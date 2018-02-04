@@ -9,11 +9,11 @@ import com.surirobot.interfaces.IProcess;
  *
  * Parser les donées passées en parametre.
  */
-public interface IParser {
+public interface IParser<T> {
 	/**
 	 * 
 	 * @param content les donées reçu de l'API interrogée.
 	 * @return {@link JSONObject} d'emotions.
 	 */
-	public JSONObject parse(String content);
+	public T parse(String content);
 }

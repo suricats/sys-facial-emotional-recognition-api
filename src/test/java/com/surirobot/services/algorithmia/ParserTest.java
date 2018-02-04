@@ -1,9 +1,7 @@
 package com.surirobot.services.algorithmia;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,9 +74,37 @@ public class ParserTest {
 		assertTrue(json.getJSONObject("scores").optDouble("fear")==0.0000128);
 	}
 	
-	@Test (expected = Exception.class)
+	@Test
 	public void parseTest2() {
-		JSONObject json = new Parser().parse("{}");
+		JSONObject json = new Parser().parse(s);
+		assertFalse(json.has("metadata"));
+		assertFalse(json.has("result"));
+		assertFalse(json.has("results"));
+		assertFalse(json.has("metadata"));
+		assertTrue(json.has("scores"));
+	}
+	
+	@Test
+	public void parseTest3() {
+		JSONObject json = new Parser().parse(s);
+		assertFalse(json.getJSONObject("scores").has("happiness"));
+		assertFalse(json.getJSONObject("scores").has("anger"));
+		assertFalse(json.getJSONObject("scores").has("surprise"));
+	}
+	
+	@Test (expected = JSONException.class)
+	public void parseTestFail() {
+		new Parser().parse("{}");
+	}
+	
+	@Test (expected = JSONException.class)
+	public void parseTestFail1() {
+		new Parser().parse("[]");
+	}
+	
+	@Test (expected = JSONException.class)
+	public void parseTestFail2() {
+		new Parser().parse("{result:results{}}");
 	}
 	
 }

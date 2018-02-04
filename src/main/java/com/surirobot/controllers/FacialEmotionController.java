@@ -1,7 +1,5 @@
 package com.surirobot.controllers;
 
-import java.util.List;
-
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.surirobot.interfaces.IProcessPicture;
 import com.surirobot.process.ProcessPicture;
 
 /**
@@ -27,9 +26,10 @@ import com.surirobot.process.ProcessPicture;
 @Controller
 public class FacialEmotionController {
 	private static final Logger logger = LogManager.getFormatterLogger();
+
 	@PostMapping(value = "/emotions/actions/retrieve-facial-emotion")
 	@ResponseBody
-	public String facial(@RequestBody Map<String, List<String>> request, HttpServletResponse response) {
+	public String facial(@RequestBody Map<String, String> request, HttpServletResponse response) {
     	logger.info("FacialEmotionController : start facial");
 		if(request.get("pictures") == null) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -37,7 +37,8 @@ public class FacialEmotionController {
 			error.put("message", "invalid request");
 			return error.toString();
 		}
-		return new ProcessPicture().process(request.get("pictures"));
+		IProcessPicture process = new ProcessPicture();
+		return process.process(request.get("pictures"));
 	}
 
 }

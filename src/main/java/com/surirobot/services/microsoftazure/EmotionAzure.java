@@ -13,10 +13,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.surirobot.communication.Communication;
 import com.surirobot.communication.ResponseHolder;
+import com.surirobot.interfaces.services.ICommunication;
+import com.surirobot.interfaces.services.IParser;
 import com.surirobot.interfaces.services.IService;
 import com.surirobot.utils.EnvVar;
 
@@ -43,7 +44,8 @@ public class EmotionAzure implements IService<JSONArray, String, byte[]>{
 
 		String result = send(decoder(image));
 		logger.info(result);
-		JSONArray json = new Parser().parse2(result);
+		IParser parser = new Parser();
+		JSONArray json = (JSONArray) parser.parse(result);
 		return json;
 	}
 

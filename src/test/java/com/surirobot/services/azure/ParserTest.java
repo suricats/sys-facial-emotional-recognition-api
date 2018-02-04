@@ -3,17 +3,11 @@ package com.surirobot.services.azure;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.UnsupportedEncodingException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHttpResponse;
-import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.surirobot.process.ProcessPicture;
 import com.surirobot.services.microsoftazure.Parser;
 /**
  * 
@@ -26,10 +20,11 @@ public class ParserTest {
 
 	
 	String s;
+	String face;
 
 	@Before
 	public void beforeTest() {
-		s ="[" + 
+		 face =
 				"  {" + 
 				"    \"faceRectangle\": {" + 
 				"      \"top\": 114," + 
@@ -47,29 +42,67 @@ public class ParserTest {
 				"      \"sadness\": 0.1," + 
 				"      \"surprise\": 0.1" + 
 				"    }" + 
-				"  }]";
+				"  }";
+		 s = "["+face+"]";
 	}
 
 	@Test
 	public void parseTest() {
-		JSONObject json = new Parser().parse(s);
-		assertTrue(json.optJSONObject("faceRectangle")==null);
-		assertTrue(json.optJSONObject("scores")!=null);
-		assertTrue(json.optJSONObject("scores").optDouble("anger") == 0.1);
+	JSONArray json = new Parser().parse(s);
+		assertTrue(json.getJSONObject(0).optJSONObject("faceRectangle")==null);
+		assertTrue(json.getJSONObject(0).optJSONObject("scores")!=null);
+		assertTrue(json.getJSONObject(0).optJSONObject("scores").optDouble("anger") == 0.1);
 	}
 	
 	@Test
 	public void parseTest1() {
-		JSONObject json = new Parser().parse(s);
-		assertFalse(json.has("faceRectangle"));
-		assertTrue(json.has("scores"));
-		assertTrue(json.optJSONObject("scores").has("anger"));
+		JSONArray json = new Parser().parse(s);
+		assertFalse(json.getJSONObject(0).has("faceRectangle"));
+		assertTrue(json.getJSONObject(0).has("scores"));
+		assertTrue(json.getJSONObject(0).optJSONObject("scores").has("anger"));
+	}
+	
+	@Test
+	public void parseTest2() {
+		JSONArray json = new Parser().parse("["+face+","+face+"]");
+		assertTrue(json.length() == 2);
+		assertTrue(json.getJSONObject(0).optJSONObject("scores").has("fear"));
+		assertTrue(json.getJSONObject(1).optJSONObject("scores").has("happiness"));
+	}
+	
+	@Test
+	public void parseTest3() {
+		JSONArray json = new Parser().parse("["+face+","+face+","+face+"]");
+		assertTrue(json.length() == 3);
+		assertTrue(json.getJSONObject(0).optJSONObject("scores").has("fear"));
+		assertTrue(json.getJSONObject(1).optJSONObject("scores").has("happiness"));
+		assertTrue(json.getJSONObject(1).optJSONObject("scores").has("disgust"));
 	}
 
 	@Test
 	public void parseEmptyArrayResponseTest() {
-		JSONObject json = new Parser().parse("[]");
-		assertTrue(json.similar(new JSONObject("{}")));
+		JSONArray json = new Parser().parse("[]");
+		assertTrue(json.similar(new JSONArray("[]")));
+	}
+	
+	@Test (expected = JSONException.class)
+	public void parseTestFail() {
+		new Parser().parse("{}");
+	}
+	
+	@Test (expected = JSONException.class)
+	public void parseTestFail1() {
+		new Parser().parse("test");
+	}
+	
+	@Test (expected = JSONException.class)
+	public void parseTestFail2() {
+		new Parser().parse("{result:results{}}");
+	}
+	
+	@Test (expected = ClassCastException.class)
+	public void parseTestFail3() {
+		new Parser().parse("[test,test]");
 	}
 
 }

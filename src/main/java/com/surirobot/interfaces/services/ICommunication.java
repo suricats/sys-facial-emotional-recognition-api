@@ -8,6 +8,4 @@ import org.apache.http.HttpEntity;
 
 import com.surirobot.communication.ResponseHolder;
 
-public interface ICommunication {
-	
-}
+public interface ICommunication {}

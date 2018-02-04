@@ -2,8 +2,10 @@ package com.surirobot.process;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 import com.surirobot.interfaces.IProcessVocal;
+import com.surirobot.interfaces.services.IService;
 import com.surirobot.services.vokaturi.EmotionVokaturi;
 /**
  * 
@@ -15,7 +17,7 @@ import com.surirobot.services.vokaturi.EmotionVokaturi;
 public class ProcessVocal implements IProcessVocal {
 
 	private static final Logger logger = LogManager.getLogger();
-
+	
 	/**
 	 * Méthode qui traite le fichier vocal reçu.
 	 * si le flux == {@link <code>null</code>} ou vide: la méthode retourne un json vide.
@@ -28,8 +30,8 @@ public class ProcessVocal implements IProcessVocal {
 		
 		if(data == null) return "{}";
 		if(data.equals("")) return "{}";
-		
-		return new EmotionVokaturi().getEmotions(data).toString();
+		IService<JSONObject, String, String> vokaturi = new EmotionVokaturi();
+		return vokaturi.getEmotions(data).toString();
 		
 	}
 

@@ -2,6 +2,7 @@ package com.surirobot.services.vokatura;
 
 import static org.junit.Assert.assertTrue;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -81,5 +82,19 @@ public class ParserTest {
 			"}";
 		JSONObject json = new Parser().parse(s);
 		assertTrue(json.has("emotion"));
+	}
+	
+	public void parseTest6() {
+		assertTrue(new Parser().parse("{}").equals(new JSONObject()));
+	}
+	
+	@Test (expected = JSONException.class)
+	public void parseTestFail() {
+		new Parser().parse("[]");
+	}
+	
+	@Test (expected = JSONException.class)
+	public void parseTestFail3() {
+		new Parser().parse("[a:{},b:{}]");
 	}
 }

@@ -5,11 +5,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.surirobot.communication.Communication;
 import com.surirobot.utils.Emotion;
 /**
  * 
@@ -43,44 +43,8 @@ public class ProcessPictureTest {
 
 	@Test
 	public void processWithoutDataTest() {
-		json = new JSONObject(new ProcessPicture().process(listImages));
+		JSONArray json = new JSONArray(new ProcessPicture().process(""));
 		assertTrue(json.length() == 0);
-	}
-
-	@Test
-	public void averageTest() {
-		List<Double> scores = new ArrayList<Double>();
-		scores.add(1.0);
-		scores.add(2.0);
-		List<JSONObject> listScores = createListScores(scores);
-		JSONObject result = ProcessPicture.average(listScores);
-		for(Emotion e : Emotion.values()) {
-			assertTrue(result.getJSONObject("scores").getDouble(e.toString().toLowerCase()) == 1.5);
-		}
-	}
-
-	@Test
-	public void averageTest2() {
-		List<Double> scores = new ArrayList<Double>();
-		scores.add(2.0);
-		scores.add(3.0);
-		scores.add(4.0);
-		List<JSONObject> listScores = createListScores(scores);
-		JSONObject result = ProcessPicture.average(listScores);
-		for(Emotion e : Emotion.values()) {
-			assertTrue(result.getJSONObject("scores").getDouble(e.toString().toLowerCase()) == 3.0);
-		}
-	}
-
-	@Test
-	public void averageTest3() {
-		List<Double> scores = new ArrayList<Double>();
-		scores.add(2.0);
-		List<JSONObject> listScores = createListScores(scores);
-		JSONObject result = ProcessPicture.average(listScores);
-		for(Emotion e : Emotion.values()) {
-			assertTrue(result.getJSONObject("scores").getDouble(e.toString().toLowerCase()) == 2.0);
-		}
 	}
 
 	@Test

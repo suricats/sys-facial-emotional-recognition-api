@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.surirobot.interfaces.IProcessVideo;
 import com.surirobot.process.ProcessPicture;
 import com.surirobot.process.ProcessVideo;
 
@@ -30,7 +31,6 @@ import com.surirobot.process.ProcessVideo;
 @Controller
 public class VideoEmotionController {
 	private static final Logger logger = LogManager.getFormatterLogger();
-
 	@PostMapping(value = "/emotions/actions/retrieve-video-emotion")
 	@ResponseBody
 	public String video(@RequestBody HashMap<String, String> request, HttpServletResponse response) {
@@ -46,12 +46,14 @@ public class VideoEmotionController {
 			request.put("pictures", request.get("pictures"));
 			if (request.get("record") instanceof String)
 				request.put("record", (String) request.get("record"));
-			return new ProcessVideo().process(request);
+			IProcessVideo process = new ProcessVideo();
+			return process.process(request);
 		}
 		else {
 			if (request.get("record") instanceof String) {
 				request.put("record", (String) request.get("record"));
-				return new ProcessVideo().process(request);
+				IProcessVideo process = new ProcessVideo();
+				return process.process(request);
 			}
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			JSONObject error = new JSONObject();

@@ -1,14 +1,15 @@
 package com.surirobot.process;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.surirobot.interfaces.IProcessPicture;
 import com.surirobot.interfaces.IProcessVideo;
+import com.surirobot.interfaces.IProcessVocal;
 
 /**
  * 
@@ -20,7 +21,6 @@ import com.surirobot.interfaces.IProcessVideo;
 public class ProcessVideo implements IProcessVideo{
 
 	private static final Logger logger = LogManager.getLogger();
-	
 	/**
 	 * elle permet de traiter le flux image/vidéo.
 	 */
@@ -28,11 +28,13 @@ public class ProcessVideo implements IProcessVideo{
     	logger.info("ProcessVideo : start process");
 		JSONObject json = new JSONObject();
 		if(data.containsKey("pictures")) {
-			JSONArray facial = new JSONArray(new ProcessPicture2().process(data.get("pictures")));
+			IProcessPicture processP = new ProcessPicture();
+			JSONArray facial = new JSONArray(processP.process(data.get("pictures")));
 			json.put("facial",facial);
 		}
 		if(data.containsKey("record")) {
-			JSONObject vocal = new JSONObject(new ProcessVocal().process((String) data.get("record")));
+			IProcessVocal processV = new ProcessVocal();
+			JSONObject vocal = new JSONObject(processV.process((String) data.get("record")));
 			json.put("vocal",vocal);
 		}
 

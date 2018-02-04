@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 import com.surirobot.communication.Communication;
 import com.surirobot.communication.ResponseHolder;
+import com.surirobot.interfaces.services.ICommunication;
+import com.surirobot.interfaces.services.IParser;
 import com.surirobot.interfaces.services.IService;
 
 /**
@@ -25,7 +27,7 @@ public class EmotionVokaturi implements IService<JSONObject, String, String>{
 	private static final Logger logger = LogManager.getLogger();
 
 	private static final String URL = "http://localhost:5000/";
-
+		
 	/**
 	 * Appelle vokaturi, transmet le résultat au parser
 	 * et retourne le résultat parsé.
@@ -34,7 +36,8 @@ public class EmotionVokaturi implements IService<JSONObject, String, String>{
 	public JSONObject getEmotions(String data) {
 		logger.info("EmotionVokaturi : start getEmotions");
 		try {
-			return new Parser().parse(send(data));
+			IParser<JSONObject> parser = new Parser();
+			return parser.parse(send(data));
 		}catch(JSONException e) {
 			return new JSONObject();
 		}

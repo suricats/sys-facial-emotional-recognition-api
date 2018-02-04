@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.surirobot.process.ProcessPicture;
+import com.surirobot.interfaces.IProcessVocal;
 import com.surirobot.process.ProcessVocal;
 
 /**
@@ -36,6 +36,7 @@ public class VocalEmotionController {
 			error.put("message", "invalid request");
 			return error.toString();
 		}
-		return new ProcessVocal().process(request.get("record"));
+		IProcessVocal process = new ProcessVocal();
+		return process.process(request.get("record"));
 	}
 }
