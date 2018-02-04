@@ -1,80 +1,151 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
-  description: "API de détection des émotions."
-  version: "1.0.0"
-  title: "Emotional Recognition Api"
-  
+  description: API de détection des émotions.
+  version: 1.0.0
+  title: Emotional Recognition Api
 tags:
-- name: "emotion"
-  description: ""
+  - name: emotion
+    description: ''
 schemes:
-- "http"
+  - http
 paths:
   /emotions/actions/retrieve-facial-emotion:
     post:
       tags:
-      - "emotion"
-      summary: "Détection des émotions faciale"
-      description: ""
-      operationId: "detectEmotions"
+        - emotion
+      summary: Détection des émotions faciales
+      description: ''
+      operationId: detectFacialEmotions
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Tableau d'images à analyser"
-        required: true
-        schema:
-          $ref: "#/definitions/Emotion"
-      responses:
-        200:
-          description: "Opération réussie"
+        - in: body
+          name: body
+          description: Image à analyser
+          required: true
           schema:
-            $ref: "#/definitions/ApiResponse"
-        400:
-          description: "Invalid request"
-            
+            $ref: '#/definitions/EmotionFacial'
+      responses:
+        '200':
+          description: Opération réussie
+          schema:
+            $ref: '#/definitions/ApiResponsePicture'
+        '400':
+          description: Invalid request
+  /emotions/actions/retrieve-vocal-emotion:
+    post:
+      tags:
+        - emotion
+      summary: Détection des émotions vocales
+      description: ''
+      operationId: detectVocalEmotions
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Enregistrement Audio à analyser
+          required: true
+          schema:
+            $ref: '#/definitions/EmotionVocal'
+      responses:
+        '200':
+          description: Opération réussie
+          schema:
+            $ref: '#/definitions/ApiResponseVocal'
+        '400':
+          description: Invalid request
+  /emotions/actions/retrieve-video-emotion:
+    post:
+      tags:
+        - emotion
+      summary: Détection des émotions faciale et vocale
+      description: ''
+      operationId: detectVideoEmotions
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Image et enregistrement audio à analyser
+          required: true
+          schema:
+            $ref: '#/definitions/EmotionVideo'
+      responses:
+        '200':
+          description: Opération réussie
+          schema:
+            $ref: '#/definitions/ApiResponseVideo'
+        '400':
+          description: Invalid request
 definitions:
-  Emotion:
-    type: "object"
+  EmotionFacial:
+    type: object
     properties:
       pictures:
-        type: "array"
+        type: string
         items:
-          $ref: "#/definitions/Picture"
+          $ref: '#/definitions/Picture'
   Picture:
-    type: "string"
-    format: "byte"
-    description: "Image encodée en Base64"
-
-  ApiResponse:
-    description: "Emotion détectée"
-    type: "object"
+    type: string
+    format: byte
+    description: Image encodée en Base64
+  EmotionVocal:
+    type: object
     properties:
-      scores:
-        type: "object"
-        description: "Emotions de bases"
-        properties:
-          anger:
-            type: "number"
-            format: "float"
-          disgust:
-            type: "number"
-            format: "float"
-          fear:
-            type: "number"
-            format: "float"
-          happiness:
-            type: "number"
-            format: "float"
-          neutral:
-            type: "number"
-            format: "float"
-          sadness:
-            type: "number"
-            format: "float"
-          surprise:
-            type: "number"
-            format: "float"
+      record:
+        type: string
+        items:
+          $ref: '#/definitions/Audio'
+  Audio:
+    type: string
+    format: byte
+    description: Enregistrement audio encodé en Base64
+  ApiResponsePicture:
+    description: Tableau contenant une émotion de visage dans l\'image
+    type: array
+    items:
+      type: object
+      properties:
+          emotion:
+            type: string
+  
+  ApiResponseVocal:
+    description: Emotion détectée
+    type: object
+    properties:
+      emotion:
+        type: string
+        description: Emotions de bases
+  EmotionVideo:
+    type: object
+    properties:
+      pictures:
+        type: string
+        items:
+          $ref: '#/definitions/Picture'
+      record:
+        type: string
+        items:
+          $ref: '#/definitions/Audio'
+          
+  ApiResponseVideo:
+    description: Emotion détectée
+    type: object
+    properties:
+      facial:
+            type: array
+            items:
+              type: object
+              properties:
+                emotion:
+                  type: string
+      vocal:
+        type: string
+        description: Emotions de bases
