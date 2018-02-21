@@ -1,6 +1,9 @@
 package com.surirobot.utils;
 
-/*
+/**
+ * 
+ * @author jussieu
+ *
  * Cette enumération permet de décrire les différents types d'émotions
  * retournées.
  */

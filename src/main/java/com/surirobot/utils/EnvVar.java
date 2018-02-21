@@ -1,17 +1,21 @@
 package com.surirobot.utils;
 
-/*
- * Enumération pour les variables d'environnement 
+/**
+ * 
+ * @author jussieu
+ *
+ * Enumération pour les variables d'environnement.
  */
 public enum EnvVar {
 
-	APIKEY;
+	APIKEY,
+	API_ALGORITHMIA,
+	API_BEYOND;
 
 	private String value;
 
 	EnvVar(){
 		try{
-			System.out.println(System.getenv(toString()));
 			value = System.getenv(toString());
 		} catch (Exception e){
 			value = null;

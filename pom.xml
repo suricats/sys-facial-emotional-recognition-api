@@ -72,7 +72,7 @@
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-		<testSourceDirectory>src/test/com/surirobot</testSourceDirectory>
+		<testSourceDirectory>src/test/java/com/surirobot</testSourceDirectory>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
