@@ -33,7 +33,8 @@ public class EmotionAzure implements IService<JSONArray, String, byte[]>{
 
 	private static final Logger logger = LogManager.getLogger();
 
-	private static final String URL = "https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize";
+	private static final String URL = "https://westcentralus.api.cognitive.microsoft.com"
+			+ "/face/v1.0/detect?returnFaceId=true&returnFaceAttributes=emotion";
 	
    /**
     * Recuperer la réponse de Azure.
