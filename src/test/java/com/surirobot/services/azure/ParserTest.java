@@ -46,38 +46,6 @@ public class ParserTest {
 		 s = "["+face+"]";
 	}
 
-	@Test
-	public void parseTest() {
-	JSONArray json = new Parser().parse(s);
-		assertTrue(json.getJSONObject(0).optJSONObject("faceRectangle")==null);
-		assertTrue(json.getJSONObject(0).optJSONObject("scores")!=null);
-		assertTrue(json.getJSONObject(0).optJSONObject("scores").optDouble("anger") == 0.1);
-	}
-	
-	@Test
-	public void parseTest1() {
-		JSONArray json = new Parser().parse(s);
-		assertFalse(json.getJSONObject(0).has("faceRectangle"));
-		assertTrue(json.getJSONObject(0).has("scores"));
-		assertTrue(json.getJSONObject(0).optJSONObject("scores").has("anger"));
-	}
-	
-	@Test
-	public void parseTest2() {
-		JSONArray json = new Parser().parse("["+face+","+face+"]");
-		assertTrue(json.length() == 2);
-		assertTrue(json.getJSONObject(0).optJSONObject("scores").has("fear"));
-		assertTrue(json.getJSONObject(1).optJSONObject("scores").has("happiness"));
-	}
-	
-	@Test
-	public void parseTest3() {
-		JSONArray json = new Parser().parse("["+face+","+face+","+face+"]");
-		assertTrue(json.length() == 3);
-		assertTrue(json.getJSONObject(0).optJSONObject("scores").has("fear"));
-		assertTrue(json.getJSONObject(1).optJSONObject("scores").has("happiness"));
-		assertTrue(json.getJSONObject(1).optJSONObject("scores").has("disgust"));
-	}
 
 	@Test
 	public void parseEmptyArrayResponseTest() {

@@ -31,7 +31,7 @@ public class Parser implements IParser<JSONArray>{
 		if(json.length()<1) return new JSONArray();
 		JSONArray result = new JSONArray();
 		json.forEach(item -> {
-		    JSONObject tmp = ((JSONObject) item).getJSONObject("scores");
+		    JSONObject tmp = ((JSONObject) item).getJSONObject("faceAttributes").getJSONObject("emotion");
 		    JSONObject score = new JSONObject();
 			for(Emotion e : Emotion.values()) {
 				score.put(e.toString().toLowerCase(), tmp.optDouble(e.toString().toLowerCase(), 0.0));
